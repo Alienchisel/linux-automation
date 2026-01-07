@@ -63,17 +63,23 @@ dest_dir_for() {
   echo "$d"
 }
 extract_one() {
-  local f="$1" base dir dest_base
+  local f="$1" base dir dest_base archive_dir
   if [[ ! -f "$f" ]]; then
     echo "extract-to-dir: '$f' - file does not exist" >&2
-    return 1
+    return 2
   fi
   base="$(basename "$f")"
   dest_base="$(dest_dir_for "$f")"
   
   # Determine extraction location based on --in-place flag
   if [[ $in_place -eq 1 ]]; then
-    dir="$(dirname "$f")/$dest_base"
+    archive_dir="$(dirname "$f")"
+    # Normalize to avoid double slashes
+    if [[ "$archive_dir" == "." ]]; then
+      dir="$dest_base"
+    else
+      dir="$archive_dir/$dest_base"
+    fi
   else
     dir="$dest_base"
   fi
