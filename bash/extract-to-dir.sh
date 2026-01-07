@@ -117,7 +117,7 @@ extract_one() {
       ;;
     *.rar)
       if have unrar; then
-        unrar x -ad -- "$f" "$dir"
+        unrar x -ad "$f" "$dir"
       elif have 7z; then
         7z x -y -- "$f" -o"$dir"
       else
