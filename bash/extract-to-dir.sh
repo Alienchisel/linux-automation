@@ -8,11 +8,19 @@ usage() {
 Usage:
   extract-to-dir.sh [--force] [--in-place] <archive> [archive ...]
 Extract one or more archives into their own directories (prevents file sprawl).
+
 Options:
   -f, --force      If the destination directory exists, extract into it anyway.
   -i, --in-place   Extract next to the archive file instead of in current directory.
   -h, --help       Show this help.
   --version        Show version information.
+
+Supported formats:
+  tar.gz, tgz, tar.bz2, tbz2, tar.xz, txz, tar.zst, tzst, tar
+  zip, rar, 7z
+  gz, bz2, xz, zst, lzma, Z
+  iso, cab, exe (cabinet archives)
+
 Examples:
   extract-to-dir.sh file.tar.gz
   extract-to-dir.sh a.zip b.rar
