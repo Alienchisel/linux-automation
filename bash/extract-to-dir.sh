@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+
+VERSION="1.0"
+
 usage() {
   cat <<'EOF'
 Usage:
@@ -9,6 +12,7 @@ Options:
   -f, --force      If the destination directory exists, extract into it anyway.
   -i, --in-place   Extract next to the archive file instead of in current directory.
   -h, --help       Show this help.
+  --version        Show version information.
 Examples:
   extract-to-dir.sh file.tar.gz
   extract-to-dir.sh a.zip b.rar
@@ -20,6 +24,7 @@ force=0
 in_place=0
 case "${1:-}" in
   -h|--help) usage; exit 0 ;;
+  --version) echo "extract-to-dir.sh version $VERSION"; exit 0 ;;
 esac
 # Parse flags (simple)
 while [[ $# -gt 0 ]]; do
@@ -27,14 +32,15 @@ while [[ $# -gt 0 ]]; do
     -f|--force) force=1; shift ;;
     -i|--in-place) in_place=1; shift ;;
     -h|--help) usage; exit 0 ;;
+    --version) echo "extract-to-dir.sh version $VERSION"; exit 0 ;;
     --) shift; break ;;
-    -*) echo "Unknown option: $1" >&2; usage; exit 2 ;;
+    -*) echo "Unknown option: $1" >&2; usage; exit 1 ;;
     *) break ;;
   esac
 done
 if [[ $# -lt 1 ]]; then
   usage
-  exit 2
+  exit 1
 fi
 have() { command -v "$1" >/dev/null 2>&1; }
 # Derive a sane directory name from an archive filename
