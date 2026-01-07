@@ -112,7 +112,7 @@ extract_one() {
       else
         echo "extract-to-dir: no zip extractor found (need unzip or 7z)" >&2
         rmdir -- "$dir" 2>/dev/null || true
-        return 3
+        return 4
       fi
       ;;
     *.rar)
@@ -123,7 +123,7 @@ extract_one() {
       else
         echo "extract-to-dir: no rar extractor found (need unrar or 7z)" >&2
         rmdir -- "$dir" 2>/dev/null || true
-        return 3
+        return 4
       fi
       ;;
     *.7z)
@@ -152,7 +152,7 @@ extract_one() {
       else
         echo "extract-to-dir: no CAB extractor found (need cabextract or 7z)" >&2
         rmdir -- "$dir" 2>/dev/null || true
-        return 3
+        return 4
       fi
       ;;
     *)
@@ -164,7 +164,7 @@ extract_one() {
       else
         echo "extract-to-dir: '$base' - unknown archive method" >&2
         rmdir -- "$dir" 2>/dev/null || true
-        return 3
+        return 4
       fi
       ;;
   esac
