@@ -3,6 +3,7 @@ set -euo pipefail
 
 LINUX_POST_DIR="/home/pentestlich/tools/exploitation/post-exploitation/linux"
 WINDOWS_POST_DIR="/home/pentestlich/tools/exploitation/post-exploitation/windows"
+PRE_EXPLOITATION_DIR="/home/pentestlich/tools/exploitation/pre-exploitation"
 
 TMP_DIR="$(mktemp -d)"
 
@@ -18,13 +19,21 @@ download_tool() {
     local dest="$3"
 
     echo "[+] Downloading $name..."
-    curl -L "$url" -o "$TMP_DIR/$name"
+    curl -fsSL "$url" -o "$TMP_DIR/$name"
     mv "$TMP_DIR/$name" "$dest"
 }
 
 make_executable() {
     local path="$1"
     chmod 755 "$path"
+}
+
+update_git_repo() {
+    local name="$1"
+    local repo_path="$2"
+
+    echo "[+] Updating $name..."
+    git -C "$repo_path" pull --ff-only
 }
 
 echo "[+] Updating exploitation tools..."
@@ -53,5 +62,10 @@ download_tool \
     "winPEASx86.exe" \
     "https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx86.exe" \
     "$WINDOWS_POST_DIR/winPEASx86.exe"
+
+# Pre-exploitation
+update_git_repo \
+    "enum4linux" \
+    "$PRE_EXPLOITATION_DIR/enum4linux"
 
 echo "[+] Done. Exploitation tools have been updated."
