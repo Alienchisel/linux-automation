@@ -1,12 +1,44 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-VERSION="0.4"
+VERSION="0.5"
 
-if [[ "${1:-}" == "--version" ]]; then
-    echo "tools-update $VERSION"
-    exit 0
-fi
+show_help() {
+cat << EOF
+tools-update $VERSION
+
+Updates selected exploitation tools.
+
+Usage:
+  tools-update [OPTIONS]
+
+Options:
+  -h, --help       Show this help message and exit
+      --version    Show script version and exit
+
+Examples:
+  tools-update
+      Update all configured tools.
+
+  tools-update --version
+      Display the current version of the script.
+
+  tools-update --help
+      Show this help message.
+EOF
+}
+
+# Argument handling
+case "${1:-}" in
+    -h|--help)
+        show_help
+        exit 0
+        ;;
+    --version)
+        echo "tools-update $VERSION"
+        exit 0
+        ;;
+esac
 
 LINUX_POST_DIR="/home/pentestlich/tools/exploitation/post-exploitation/linux"
 WINDOWS_POST_DIR="/home/pentestlich/tools/exploitation/post-exploitation/windows"
