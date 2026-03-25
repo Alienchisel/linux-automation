@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WALL_DIR="$HOME/Pictures/wallpapers/piranesi/processed"
+LAST_FILE="$HOME/.cache/last_wallpaper"
+
+mkdir -p "$(dirname "$LAST_FILE")"
+
+mapfile -d '' files < <(
+  find "$WALL_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) -print0
+)
+
+count=${#files[@]}
+
+if (( count == 0 )); then
+  printf 'No wallpapers found in: %s\n' "$WALL_DIR" >&2
+  exit 1
+fi
+
+if (( count == 1 )); then
+  file="${files[0]}"
+else
+  last=""
+  [[ -f "$LAST_FILE" ]] && last=$(<"$LAST_FILE")
+
+  while :; do
+    file="${files[RANDOM % count]}"
+    [[ "$file" != "$last" ]] && break
+  done
+fi
+
+xfconf-query -c xfce4-desktop -l |
+while IFS= read -r prop; do
+  case "$prop" in
+    */image-path|*/last-image)
+      xfconf-query -c xfce4-desktop -p "$prop" -s "$file" 2>/dev/null || true
+      ;;
+  esac
+done
+
+printf '%s\n' "$file" > "$LAST_FILE"
+
+pkill xfdesktop 2>/dev/null || true
+xfdesktop >/dev/null 2>&1 &
+
+printf 'Wallpaper set to: %s\n' "$file"
